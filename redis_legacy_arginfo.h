@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: fb1a3f1245758210548e5ed11543fe059e6e8770 */
+ * Stub hash: 9cf76e63dfe76d0439291cb4a994bb10ba676948 */
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Redis___construct, 0, 0, 0)
 	ZEND_ARG_INFO(0, options)
@@ -122,7 +122,10 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_class_Redis_debug arginfo_class_Redis__prefix
 
-#define arginfo_class_Redis_decr arginfo_class_Redis__prefix
+ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Redis_decr, 0, 0, 1)
+	ZEND_ARG_INFO(0, key)
+	ZEND_ARG_INFO(0, by)
+ZEND_END_ARG_INFO()
 
 #define arginfo_class_Redis_decrBy arginfo_class_Redis_append
 
@@ -155,7 +158,7 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_class_Redis_exec arginfo_class_Redis___destruct
 
-#define arginfo_class_Redis_exists arginfo_class_Redis__prefix
+#define arginfo_class_Redis_exists arginfo_class_Redis_del
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Redis_expire, 0, 0, 2)
 	ZEND_ARG_INFO(0, key)
@@ -302,7 +305,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Redis_hscan, 0, 0, 2)
 	ZEND_ARG_INFO(0, count)
 ZEND_END_ARG_INFO()
 
-#define arginfo_class_Redis_incr arginfo_class_Redis__prefix
+#define arginfo_class_Redis_incr arginfo_class_Redis_decr
 
 #define arginfo_class_Redis_incrBy arginfo_class_Redis_append
 
@@ -505,7 +508,7 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_class_Redis_sInter arginfo_class_Redis_del
 
-#define arginfo_class_Redis_sInterStore arginfo_class_Redis_sDiffStore
+#define arginfo_class_Redis_sInterStore arginfo_class_Redis_del
 
 #define arginfo_class_Redis_sMembers arginfo_class_Redis__prefix
 
@@ -534,6 +537,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Redis_scan, 0, 0, 1)
 	ZEND_ARG_INFO(1, iterator)
 	ZEND_ARG_INFO(0, pattern)
 	ZEND_ARG_INFO(0, count)
+	ZEND_ARG_INFO(0, type)
 ZEND_END_ARG_INFO()
 
 #define arginfo_class_Redis_scard arginfo_class_Redis__prefix
@@ -675,6 +679,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Redis_xinfo, 0, 0, 1)
 	ZEND_ARG_INFO(0, operation)
 	ZEND_ARG_INFO(0, arg1)
 	ZEND_ARG_INFO(0, arg2)
+	ZEND_ARG_INFO(0, count)
 ZEND_END_ARG_INFO()
 
 #define arginfo_class_Redis_xlen arginfo_class_Redis__prefix
@@ -717,10 +722,10 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Redis_xtrim, 0, 0, 2)
 	ZEND_ARG_INFO(0, approx)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Redis_zAdd, 0, 0, 3)
+ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Redis_zAdd, 0, 0, 2)
 	ZEND_ARG_INFO(0, key)
-	ZEND_ARG_INFO(0, score)
-	ZEND_ARG_INFO(0, value)
+	ZEND_ARG_INFO(0, score_or_options)
+	ZEND_ARG_VARIADIC_INFO(0, more_scores_and_mems)
 ZEND_END_ARG_INFO()
 
 #define arginfo_class_Redis_zCard arginfo_class_Redis__prefix
