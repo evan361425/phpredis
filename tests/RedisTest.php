@@ -33,6 +33,10 @@ class Redis_Test extends TestSuite
      */
     protected $sessionSaveHandler = 'redis';
 
+    protected function getNilValue() {
+        return FALSE;
+    }
+
     protected function getSerializers() {
         $result = [Redis::SERIALIZER_NONE, Redis::SERIALIZER_PHP];
 
@@ -42,6 +46,18 @@ class Redis_Test extends TestSuite
             $result[] = Redis::SERIALIZER_JSON;
         if (defined('Redis::SERIALIZER_MSGPACK'))
             $result[] = Redis::SERIALIZER_MSGPACK;
+
+        return $result;
+    }
+
+    protected function getCompressors() {
+        $result[] = Redis::COMPRESSION_NONE;
+        if (defined('Redis::COMPRESSION_LZF'))
+            $result[] = Redis::COMPRESSION_LZF;
+        if (defined('Redis::COMPRESSION_LZ4'))
+            $result[] = Redis::COMPRESSION_LZ4;
+        if (defined('Redis::COMPRESSION_ZSTD'))
+            $result[] = Redis::COMPRESSION_ZSTD;
 
         return $result;
     }
@@ -2837,7 +2853,7 @@ class Redis_Test extends TestSuite
         // references
         $keys = [123, 'y'];
         foreach ($keys as &$key) {}
-        $this->assertTrue([123 => 'x', 'y' => '456'] === $this->redis->hMget('h', $keys));
+        $this->assertEquals($this->redis->hMget('h', $keys), [123 => 'x', 'y' => '456']);
 
         // check non-string types.
         $this->redis->del('h1');
@@ -4778,11 +4794,25 @@ class Redis_Test extends TestSuite
 
     private function checkCompression($mode, $level)
     {
-        $this->assertTrue($this->redis->setOption(Redis::OPT_COMPRESSION, $mode) === TRUE);  // set ok
-        $this->assertTrue($this->redis->getOption(Redis::OPT_COMPRESSION) === $mode);    // get ok
+        $set_cmp = $this->redis->setOption(Redis::OPT_COMPRESSION, $mode);
+        $this->assertTrue($set_cmp);
+        if ($set_cmp !== true)
+            return;
 
-        $this->assertTrue($this->redis->setOption(Redis::OPT_COMPRESSION_LEVEL, $level) === TRUE);
-        $this->assertTrue($this->redis->getOption(Redis::OPT_COMPRESSION_LEVEL) === $level);
+        $get_cmp = $this->redis->getOption(Redis::OPT_COMPRESSION);
+        $this->assertEquals($get_cmp, $mode);
+        if ($get_cmp !== $mode)
+            return;
+
+        $set_lvl = $this->redis->setOption(Redis::OPT_COMPRESSION_LEVEL, $level);
+        $this->assertTrue($set_lvl);
+        if ($set_lvl !== true)
+            return;
+
+        $get_lvl = $this->redis->getOption(Redis::OPT_COMPRESSION_LEVEL);
+        $this->assertEquals($get_lvl, $level);
+        if ($get_lvl !== $level)
+            return;
 
         $val = 'xxxxxxxxxx';
         $this->redis->set('key', $val);
@@ -5115,7 +5145,7 @@ class Redis_Test extends TestSuite
     }
 
     public function testCompressHelpers() {
-        $compressors = self::getAvailableCompression();
+        $compressors = $this->getCompressors();
 
         $vals = ['foo', 12345, random_bytes(128), ''];
 
@@ -5148,7 +5178,7 @@ class Redis_Test extends TestSuite
         ];
 
         foreach ($this->getSerializers() as $ser) {
-            $compressors = self::getAvailableCompression();
+            $compressors = $this->getCompressors();
             foreach ($compressors as $cmp) {
                 $this->redis->setOption(Redis::OPT_SERIALIZER, $ser);
                 $this->redis->setOption(Redis::OPT_COMPRESSION, $cmp);
