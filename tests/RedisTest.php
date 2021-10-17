@@ -5914,8 +5914,10 @@ class Redis_Test extends TestSuite
 
     /* Test a 'raw' command */
     public function testRawCommand() {
-        $this->redis->set('mykey','some-value');
-        $str_result = $this->redis->rawCommand('get', 'mykey');
+        $key = uniqid();
+
+        $this->redis->set($key,'some-value');
+        $str_result = $this->redis->rawCommand('get', $key);
         $this->assertEquals($str_result, 'some-value');
 
         $this->redis->del('mylist');
